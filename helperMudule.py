@@ -18,13 +18,11 @@ def createDict(file ) :
   return True
 
 
-createDict('routes.txt')
+#createDict('routes.txt')
 
 #This method will reverse the each route in the file
-def reverseTrip():
-    print("reverse the route of the trip")
-
-
+def reverseTrip(sentence):
+   if sentence == 'LIST':
     for flight in dic.keys():
 
         origin = flight.split("-")[0]
@@ -32,10 +30,13 @@ def reverseTrip():
 
         reverseString =  dest + "-" + origin
         reverseRoute.append(reverseString)
+
+    #for index in reverseRoute:
+        # print(index)
     return reverseRoute   #Return list of reverse trips
 
-reverseTrip()
 
+#reverseTrip('LIST')
 
 
 #method that returns all flights
@@ -45,11 +46,12 @@ def listAllFlights():
     print("---------------------")
     for flight in flights_list:
         print(flight)
+
     print("\nNow the reversed list\n")
     for up in reverseRoute:
         print(up)
 
-#listAllFlights()
+
 
 
 
@@ -129,8 +131,8 @@ def travelTo(searchCommand):
         print ("INVALID COMMAND. PLEASE TRY AGAIN, DID YOU MEAN 'SEARCHDEPARTURE dep' ? ")
 
 
-print("\nThe destinations available will be displyed\n")
-dests = travelTo('SEARCHDEPARTURE MIA')
+#print("\nThe destinations available will be displyed\n")
+#dests = travelTo('SEARCHDEPARTURE MIA')
 
 
 def SearchALL():
