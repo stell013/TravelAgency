@@ -1,4 +1,6 @@
 dic = {}  # dictionary
+reverseRoute = []  #list reversed
+reverseString = " "
 
 def createDict(file ) :
   f  =  open(file , 'r')
@@ -18,6 +20,22 @@ def createDict(file ) :
 
 createDict('routes.txt')
 
+#This method will reverse the each route in the file
+def reverseTrip():
+    print("reverse the route of the trip")
+
+
+    for flight in dic.keys():
+
+        origin = flight.split("-")[0]
+        dest = flight.split("-")[1]
+
+        reverseString =  dest + "-" + origin
+        reverseRoute.append(reverseString)
+    return reverseRoute   #Return list of reverse trips
+
+reverseTrip()
+
 
 
 #method that returns all flights
@@ -27,8 +45,11 @@ def listAllFlights():
     print("---------------------")
     for flight in flights_list:
         print(flight)
+    print("\nNow the reversed list\n")
+    for up in reverseRoute:
+        print(up)
 
-listAllFlights()
+#listAllFlights()
 
 
 
@@ -49,7 +70,19 @@ def travelFrom(searchCommand):
 
                  if flight.split("-")[1] == dest: #if dest is on dictionary
                     print(origin)
-                  # print(flight) In case we need the entire route
+                   # print(flight)  # In case we need the entire route
+
+         print("\nNow in the reversed list\n")
+
+         for up in reverseRoute:
+
+             reversedOrigin = up.split("-")[0]
+
+             if up.split("-")[1] == dest:
+                 print(reversedOrigin)
+                 #print(up)
+
+
 
      else:
          print ("INVALID COMMAND. PLEASE TRY AGAIN, DID YOU MEAN 'SEARCH dest' ? ")
@@ -57,7 +90,7 @@ def travelFrom(searchCommand):
 
 
 #print("\nThe departures available will be displyed\n")
-#dests = travelFrom('SEARCH MEX')
+#dests = travelFrom('SEARCH MIA')
 
 
 #SEARCHDEPARTURE dep method
@@ -76,14 +109,31 @@ def travelTo(searchCommand):
             dest = flight.split("-")[1]
 
             if origin == dep:  # if dest is on dictionary
-                # print(dest)
+                 #print(dest)
                  print(flight) #In case we need the entire route
+
+        print("\nNow in the reversed list\n")
+
+        for up in reverseRoute:
+
+            reversedOrigin = up.split("-")[0]
+            reversedDest = up.split("-")[1]
+
+            if reversedOrigin == dep:
+                # print(reversedDest)
+                 print(up)
+
+
 
     else:
         print ("INVALID COMMAND. PLEASE TRY AGAIN, DID YOU MEAN 'SEARCHDEPARTURE dep' ? ")
 
 
 print("\nThe destinations available will be displyed\n")
-dests = travelTo('SEARCHDEPARTURE HAV')
+dests = travelTo('SEARCHDEPARTURE MIA')
+
+
+def SearchALL():
+    print("This is the SEARCHALL MIA ")
 
 
