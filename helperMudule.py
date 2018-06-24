@@ -21,8 +21,8 @@ def createDict(file ) :
 #createDict('routes.txt')
 
 #This method will reverse the each route in the file
-def reverseTrip(sentence):
-   if sentence == 'LIST':
+def reverseTrip():
+
     for flight in dic.keys():
 
         origin = flight.split("-")[0]
@@ -31,33 +31,56 @@ def reverseTrip(sentence):
         reverseString =  dest + "-" + origin
         reverseRoute.append(reverseString)
 
-    #for index in reverseRoute:
-        # print(index)
+
     return reverseRoute   #Return list of reverse trips
 
 
-#reverseTrip('LIST')
+#reverseTrip()
 
+
+flightList=[]
+reversedFlightList=[]
 
 #method that returns all flights
-def listAllFlights():
-    flights_list = dic.keys()
-    print("List of Flights:")
-    print("---------------------")
-    for flight in flights_list:
-        print(flight)
+def listAllFlights(sentence):
+    errorMessage = "Wrong command. Did you mean 'LIST' ? "
 
-    print("\nNow the reversed list\n")
-    for up in reverseRoute:
-        print(up)
+    if sentence == 'LIST':
+
+      flights_list = dic.keys()
+
+      for flight in flights_list:
+          flightList.append(flight)
+
+      print("\n\n")
+
+      for up in reverseRoute:
+          reversedFlightList.append(up)
+
+      for reversedEle in reversedFlightList:
+          flightList.append(reversedEle)
+
+    else:
+      flightList.append(errorMessage)
 
 
 
 
+    return flightList
 
+
+
+#print(listAllFlights('LIST'))
+
+
+list_Dest=[]
+reverseList_Dest= []
 
 #this method will return all places with DEST dest
 def travelFrom(searchCommand):
+
+     errorMessage = "INVALID COMMAND. PLEASE TRY AGAIN, DID YOU MEAN 'SEARCH dest' ? "
+
      content = searchCommand.split(" ")
      command = content[0]
      dest = content[1]
@@ -71,33 +94,46 @@ def travelFrom(searchCommand):
                  origin = flight.split("-")[0] #get the departure place
 
                  if flight.split("-")[1] == dest: #if dest is on dictionary
-                    print(origin)
+                   # print(origin)
+                   list_Dest.append(origin)
                    # print(flight)  # In case we need the entire route
 
-         print("\nNow in the reversed list\n")
 
          for up in reverseRoute:
 
              reversedOrigin = up.split("-")[0]
 
              if up.split("-")[1] == dest:
-                 print(reversedOrigin)
+                 #print(reversedOrigin)
                  #print(up)
+                 reverseList_Dest.append(reversedOrigin)
+
+         for reversedEle in reverseList_Dest:
+             list_Dest.append(reversedEle)
 
 
 
      else:
-         print ("INVALID COMMAND. PLEASE TRY AGAIN, DID YOU MEAN 'SEARCH dest' ? ")
+         list_Dest.append(errorMessage)
+
+     return list_Dest
 
 
 
 #print("\nThe departures available will be displyed\n")
-#dests = travelFrom('SEARCH MIA')
+#print(travelFrom('SEARCH MIA'))
+
 
 
 #SEARCHDEPARTURE dep method
 
+list_Dep=[]
+reverseList_Dep= []
+
 def travelTo(searchCommand):
+
+    errorMessage = "INVALID COMMAND. PLEASE TRY AGAIN, DID YOU MEAN 'SEARCHDEPARTURE dep' ? "
+
     content = searchCommand.split(" ")
     command = content[0]
     dep = content[1]     #departure name
@@ -112,9 +148,10 @@ def travelTo(searchCommand):
 
             if origin == dep:  # if dest is on dictionary
                  #print(dest)
-                 print(flight) #In case we need the entire route
+                 #print(flight) #In case we need the entire route
+                 list_Dep.append(flight)
 
-        print("\nNow in the reversed list\n")
+
 
         for up in reverseRoute:
 
@@ -123,16 +160,22 @@ def travelTo(searchCommand):
 
             if reversedOrigin == dep:
                 # print(reversedDest)
-                 print(up)
+                # print(up)
+                reverseList_Dep.append(up)
+
+        for reversedEle in reverseList_Dep:
+            list_Dep.append(reversedEle)
 
 
 
     else:
-        print ("INVALID COMMAND. PLEASE TRY AGAIN, DID YOU MEAN 'SEARCHDEPARTURE dep' ? ")
+        list_Dep.append(errorMessage)
+
+    return list_Dep
 
 
 #print("\nThe destinations available will be displyed\n")
-#dests = travelTo('SEARCHDEPARTURE MIA')
+#print(travelTo('SEARCHDEPARTURE MIA'))
 
 
 def SearchALL():
