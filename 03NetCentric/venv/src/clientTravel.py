@@ -9,7 +9,7 @@ clientSocket.connect((serverName, serverPort))
 print("Welcome to the TravelAgency")
 
 
-sentence = raw_input('Tell us what do you need : ')
+sentence = input('Tell us what do you need : ')
 clientSocket.send(sentence.encode())
 
 modifiedSentence = clientSocket.recv(1024)
