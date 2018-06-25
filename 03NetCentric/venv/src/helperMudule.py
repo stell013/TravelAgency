@@ -43,6 +43,10 @@ def commandHandler(command):
 
     command_Method = []
 
+    if command == 'HELP' or command == 'help':
+
+        command_Method = showAvailableCommands()
+
     if command == 'LIST':
 
         command_Method = listAllFlights(command)
@@ -59,6 +63,21 @@ def commandHandler(command):
     return  command_Method
 
 
+def showAvailableCommands():
+        commandsList = []
+    
+
+
+        commandsList.append('<SEARCH dest>')
+        commandsList.append('<SEARCHDEPARTURE dest>')
+        commandsList.append('<SEARCHALL DEST>')
+        commandsList.append('<LIST>')
+        commandsList.append('<BUY_TICKET>') 
+        commandsList.append('<BUYRT_TICKET>') 
+        commandsList.append('<RETURN_TICKET [where] [seats]>')
+        commandsList.append('<RETURNRT_TICKET [where] [seats]>') 
+
+        return commandsList 
 
 
 
