@@ -15,7 +15,7 @@ while True:
 	clientSocket.connect((serverName, serverPort))
 	
 
-	sentence = input('Tell us what do you need : ')
+	sentence = input('\nTell us what do you need : \n')
 	clientSocket.send(sentence.encode())
 
 	modifiedSentence = clientSocket.recv(1024)

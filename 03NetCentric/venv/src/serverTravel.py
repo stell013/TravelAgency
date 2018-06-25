@@ -11,7 +11,7 @@ serverPort = 10000
 serverSocket = socket(AF_INET, SOCK_STREAM)
 serverSocket.bind(('', serverPort))
 serverSocket.listen(2)
-print('\nThe server is ready to receive\n')
+print('The server is ready to receive')
 while True:
 	connectionSocket, addr = serverSocket.accept()
 	print("Connected with " + addr[0] + ":" + str(addr[1]))
