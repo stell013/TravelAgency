@@ -1,4 +1,11 @@
+#elements for dictionary
 dic = {}  # dictionary
+
+
+reverseSeats =  []
+reverseCost = []
+
+
 reverseRoute = []  #list reversed
 reverseString = " "
 
@@ -10,10 +17,13 @@ def createDict(file ) :
         content = line.split(" ")
         route = content[0]
         seats = content[1]
+        reverseSeats.append(seats)
         cost = content[2]
-        dic[route] = [seats, cost]
+        reverseCost.append(cost)
+        dic[route] = [seats, cost] #Since I have 2 values for this dictionaries I have to asign them as a list and them access each 
 
   #returns a list , then get element 0 of the list
+  
   print("File has been uploaded")
   return True
 
@@ -38,35 +48,45 @@ def reverseTrip():
 #reverseTrip()
 
 
-#this is the only method called f
+#this is the only method called 
+
 def commandHandler(command):
 
     command_Method = []
+    errorMessage= 'WRONG COMMAND. PLEASE VERIFY THE SPELLING OR YOU CAN CONSULT <HELP>'
 
     if command == 'HELP' or command == 'help':
 
         command_Method = showAvailableCommands()
 
-    if command == 'LIST':
+    elif command == 'LIST' :
 
         command_Method = listAllFlights(command)
 
-    elif command.__contains__('SEARCHDEPARTURE'):
+    elif command.__contains__('SEARCHDEPARTURE') :
 
         command_Method = travelTo(command)
 
-    elif command.__contains__('SEARCH'):
+    elif command.__contains__('searchall') :
+
+        command_Method = searchaLL(command)
+
+    elif command.__contains__('SEARCH') :
 
         command_Method = travelFrom(command)
+    
+   
+    else: 
+        command_Method.append(errorMessage)
+
 
 
     return  command_Method
-
+ 
 
 def showAvailableCommands():
-        commandsList = []
     
-
+        commandsList = []
 
         commandsList.append('<SEARCH dest>')
         commandsList.append('<SEARCHDEPARTURE dest>')
@@ -83,10 +103,10 @@ def showAvailableCommands():
 
 #method that returns all flights
 def listAllFlights(sentence):
+
     flightList = []
     reversedFlightList = []
-
-    errorMessage = "Wrong command. Did you mean 'LIST' ? "
+    
 
     if sentence == 'LIST':
 
@@ -101,11 +121,6 @@ def listAllFlights(sentence):
       for reversedEle in reversedFlightList:
           flightList.append(reversedEle)
 
-    else:
-      flightList.append(errorMessage)
-
-
-
 
     return flightList
 
@@ -113,47 +128,40 @@ def listAllFlights(sentence):
 
 #this method will return all places with DEST dest
 def travelFrom(searchCommand):
-     list_Dest = []
-     reverseList_Dest = []
+    list_Dest = []
+    reverseList_Dest = []
 
-     errorMessage = "INVALID COMMAND. PLEASE TRY AGAIN, DID YOU MEAN 'SEARCH dest' ? "
+    
+    content = searchCommand.split(" ")
+    command = content[0]
+    dest = content[1]
 
-     content = searchCommand.split(" ")
-     command = content[0]
-     dest = content[1]
+     
 
-     #try to validate it for capitalize letters
-     if command == 'SEARCH':
+    for flight in dic.keys(): #return all the complete trips
 
+        origin = flight.split("-")[0] #get the departure place
 
-         for flight in dic.keys(): #return all the complete trips
-
-                 origin = flight.split("-")[0] #get the departure place
-
-                 if flight.split("-")[1] == dest: #if dest is on dictionary
+        if flight.split("-")[1] == dest: #if dest is on dictionary
                    # print(origin)
                    list_Dest.append(origin)
                    # print(flight)  # In case we need the entire route
 
 
-         for up in reverseRoute:
+    for up in reverseRoute:
 
-             reversedOrigin = up.split("-")[0]
+        reversedOrigin = up.split("-")[0]
 
-             if up.split("-")[1] == dest:
+        if up.split("-")[1] == dest:
                  #print(reversedOrigin)
                  #print(up)
                  reverseList_Dest.append(reversedOrigin)
 
-         for reversedEle in reverseList_Dest:
-             list_Dest.append(reversedEle)
+    for reversedEle in reverseList_Dest:
+        list_Dest.append(reversedEle)
 
-
-
-     else:
-         list_Dest.append(errorMessage)
-
-     return list_Dest
+     
+    return list_Dest
 
 
 
@@ -166,7 +174,7 @@ def travelTo(searchCommand):
     list_Dep = []
     reverseList_Dep = []
 
-    errorMessage = "INVALID COMMAND. PLEASE TRY AGAIN, DID YOU MEAN 'SEARCHDEPARTURE dep' ? "
+    
 
     content = searchCommand.split(" ")
     command = content[0]
@@ -202,25 +210,69 @@ def travelTo(searchCommand):
 
 
 
-    else:
-        list_Dep.append(errorMessage)
-
     return list_Dep
 
 
 #print("\nThe destinations available will be displyed\n")
 #print(travelTo('SEARCHDEPARTURE MIA'))
 
+roundTrip_Dict ={}
+def createDictroundedTrip():
 
-def SearchALL():
-    print("This is the SEARCHALL MIA ")
+    for f, s, c in zip(reverseRoute, reverseSeats, reverseCost):
+        roundTrip_Dict[f] = [s,c ]  #Dictionary
+        
+    print(" Dictionary for roundedTrip has been created")
+    return True 
 
-         #TO DO LIST
 
-#for buytickets methods have the dictionary to decrease its seats
-#update dictionary
-#so next user entering the same command will have the real information
+def searchaLL(command):
+    location = command.split(" ")[1]
 
-#also validate commands for  no capital letters
+    
+    roundedInfo = []
+    #Info = []
 
-#HANDLE ERROS better
+    rd = createDictroundedTrip()
+    if rd == True :
+        for flight in roundTrip_Dict.keys():
+            loc = flight.split("-")[1]
+            loc1 = flight.split("-")[0]
+
+            if loc == location: 
+                roundedInfo.append("\nROUNDED" + '\n' + flight + '\n' + "Seats left: " + roundTrip_Dict[flight][0] + '\n' + "Cost each: " + roundTrip_Dict[flight][1])
+            if loc1 == location: 
+                roundedInfo.append("\nROUNDED" + '\n' + flight + '\n' + "Seats left: " + roundTrip_Dict[flight][0] + '\n' + "Cost each: " + roundTrip_Dict[flight][1])
+
+
+    for flightA in dic.keys():
+        locA = flightA.split("-")[1]
+        locB = flightA.split("-")[0]
+
+        if locA == location:
+            roundedInfo.append("\nORIGINAL" + '\n' + flightA + '\n' + "Seats left: " + dic[flightA][0] + '\n' + "Cost each: " + dic[flightA][1])
+        if locB == location:
+            roundedInfo.append("\nORIGINAL" + '\n' + flightA + '\n' + "Seats left: " + dic[flightA][0] + '\n' + "Cost each: " + dic[flightA][1])
+
+        
+    
+    return roundedInfo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
