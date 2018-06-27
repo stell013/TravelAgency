@@ -6,6 +6,7 @@ import json
 
 createDict('routes.txt')
 reverseTrip()
+createDictroundedTrip()
 
 
 serverPort = 10000

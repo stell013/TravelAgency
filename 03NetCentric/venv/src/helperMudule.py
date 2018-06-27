@@ -1,7 +1,8 @@
 #elements for dictionary
 dic = {}  # dictionary
 
-
+#seats = 0
+#costy = 0
 reverseSeats =  []
 reverseCost = []
 
@@ -18,11 +19,11 @@ def createDict(fileObject) :
 
         content = line.split(" ")
         route = content[0]
-        seats = content[1]
+        seats = int(content[1])
         reverseSeats.append(seats)
-        cost = content[2]
-        reverseCost.append(cost)
-        dic[route] = [seats, cost] #Since I have 2 values for this dictionaries I have to asign them as a list and them access each 
+        costy = int(content[2])
+        reverseCost.append(costy)
+        dic[route] = [seats, costy] #Since I have 2 values for this dictionaries I have to asign them as a list and them access each 
 
   #returns a list , then get element 0 of the list
   
@@ -238,17 +239,21 @@ def searchaLL(command):
     roundedInfo = []
     #Info = []
 
-    rd = createDictroundedTrip()
-    if rd == True :
-        for flight , flightA in zip(roundTrip_Dict.keys(), dic.keys()):
+   # rd = createDictroundedTrip()
+   # if rd == True :
+    for flight , flightA in zip(roundTrip_Dict.keys(), dic.keys()):
             locA= flightA.split("-")[0] 
-            loc = flight.split("-")[1] 
+            loc = flight.split("-")[1]    #dic[flightA][0]
          
             if locA == location: 
-                roundedInfo.append("\nORIGINAL" + '\n' + flightA + '\n' + "Seats left: " + dic[flightA][0] + '\n' + "Cost each: " + dic[flightA][1])
+                rest = str(dic[flightA][0])
+                money = str(dic[flightA][1])
+                roundedInfo.append("\nORIGINAL" + '\n' + flightA + '\n' + "Seats left: " + rest + '\n' + "Cost each: " + money )
 
             if loc == location: 
-                roundedInfo.append("\nROUNDED" + '\n' + flight + '\n' + "Seats left: " + roundTrip_Dict[flight][0] + '\n' + "Cost each: " + roundTrip_Dict[flight][1])
+                rest2 = str(roundTrip_Dict[flight][0])
+                money2 = str(roundTrip_Dict[flight][1])
+                roundedInfo.append("\nROUNDED" + '\n' + flight + '\n' + "Seats left: " + rest2 + '\n' + "Cost each: " + money2)
            
     return roundedInfo
 
@@ -261,9 +266,9 @@ def buyTicket(command):
 
     buy_Action = command.split(" ")[0]
     where = command.split(" ")[1]
-    seats = command.split(" ")[2]
+    myseats = command.split(" ")[2]
     
-    seats_Num = int(seats)
+    seats_Num = int(myseats)
     
 
     for A  in  dic.keys():
@@ -281,24 +286,19 @@ def buyTicket(command):
                 actualSeats = 0 
                 seatList.append(actualSeats)
 
-    rd = createDictroundedTrip()
-    if rd == True :
-        for B in roundTrip_Dict.keys():
-            if where == B:
+    
+ 
+    for B in roundTrip_Dict.keys():
+        if where == B:
            
-                actualSeatsB =  int(roundTrip_Dict[B][0])
-                if actualSeatsB !=0:
-                    actualSeatsB = actualSeatsB - seats_Num 
-                    roundTrip_Dict[B][0] = actualSeatsB #update dictionary
-                    seatList.append(actualSeatsB) 
-                else: 
-                    actualSeatsB = 0 
-                    seatList.append(actualSeatsB)
-            
-
-    
-
-    
+            actualSeatsB =  int(roundTrip_Dict[B][0])
+            if actualSeatsB !=0:
+                actualSeatsB = actualSeatsB - seats_Num 
+                roundTrip_Dict[B][0] = actualSeatsB #update dictionary
+                seatList.append(actualSeatsB) 
+            else: 
+                actualSeatsB = 0 
+                seatList.append(actualSeatsB)
 
 
     return seatList
