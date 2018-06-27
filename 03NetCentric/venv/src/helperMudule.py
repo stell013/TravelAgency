@@ -9,8 +9,10 @@ reverseCost = []
 reverseRoute = []  #list reversed
 reverseString = " "
 
-def createDict(file ) :
-  f  =  open(file , 'r')
+
+
+def createDict(fileObject) :
+  f  =  open(fileObject, 'r')
 
   for line in f: #iterating through each line in the file
 
@@ -63,6 +65,10 @@ def commandHandler(command):
 
         command_Method = listAllFlights(command)
 
+    elif command.__contains__( 'BUY_TICKET '):
+
+        command_Method = buyTicket(command)
+
     elif command.__contains__('SEARCHDEPARTURE') :
 
         command_Method = travelTo(command)
@@ -74,8 +80,7 @@ def commandHandler(command):
     elif command.__contains__('SEARCH') :
 
         command_Method = travelFrom(command)
-    
-   
+
     else: 
         command_Method.append(errorMessage)
 
@@ -235,28 +240,70 @@ def searchaLL(command):
 
     rd = createDictroundedTrip()
     if rd == True :
-        for flight in roundTrip_Dict.keys():
-            loc = flight.split("-")[1]
-            loc1 = flight.split("-")[0]
+        for flight , flightA in zip(roundTrip_Dict.keys(), dic.keys()):
+            locA= flightA.split("-")[0] 
+            loc = flight.split("-")[1] 
+         
+            if locA == location: 
+                roundedInfo.append("\nORIGINAL" + '\n' + flightA + '\n' + "Seats left: " + dic[flightA][0] + '\n' + "Cost each: " + dic[flightA][1])
 
             if loc == location: 
                 roundedInfo.append("\nROUNDED" + '\n' + flight + '\n' + "Seats left: " + roundTrip_Dict[flight][0] + '\n' + "Cost each: " + roundTrip_Dict[flight][1])
-            if loc1 == location: 
-                roundedInfo.append("\nROUNDED" + '\n' + flight + '\n' + "Seats left: " + roundTrip_Dict[flight][0] + '\n' + "Cost each: " + roundTrip_Dict[flight][1])
-
-
-    for flightA in dic.keys():
-        locA = flightA.split("-")[1]
-        locB = flightA.split("-")[0]
-
-        if locA == location:
-            roundedInfo.append("\nORIGINAL" + '\n' + flightA + '\n' + "Seats left: " + dic[flightA][0] + '\n' + "Cost each: " + dic[flightA][1])
-        if locB == location:
-            roundedInfo.append("\nORIGINAL" + '\n' + flightA + '\n' + "Seats left: " + dic[flightA][0] + '\n' + "Cost each: " + dic[flightA][1])
-
-        
-    
+           
     return roundedInfo
+
+#BUY_TICKET [where] [seats]
+def buyTicket(command):
+
+    seatList = []
+    
+
+
+    buy_Action = command.split(" ")[0]
+    where = command.split(" ")[1]
+    seats = command.split(" ")[2]
+    
+    seats_Num = int(seats)
+    
+
+    for A  in  dic.keys():
+        if where == A :
+             #take the number of seats: seatsNo
+             #substract the # entered from the seatsNo
+             #update dictionary!!!
+             actualSeats =  int(dic[A][0])
+             if actualSeats != 0 :
+                actualSeats =  actualSeats - seats_Num 
+                dic[A][0] = actualSeats  #update dictionary
+                seatList.append(actualSeats)
+                
+             else:
+                actualSeats = 0 
+                seatList.append(actualSeats)
+
+    rd = createDictroundedTrip()
+    if rd == True :
+        for B in roundTrip_Dict.keys():
+            if where == B:
+           
+                actualSeatsB =  int(roundTrip_Dict[B][0])
+                if actualSeatsB !=0:
+                    actualSeatsB = actualSeatsB - seats_Num 
+                    roundTrip_Dict[B][0] = actualSeatsB #update dictionary
+                    seatList.append(actualSeatsB) 
+                else: 
+                    actualSeatsB = 0 
+                    seatList.append(actualSeatsB)
+            
+
+    
+
+    
+
+
+    return seatList
+
+
 
 
 
