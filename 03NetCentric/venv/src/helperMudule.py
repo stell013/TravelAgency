@@ -11,6 +11,8 @@ reverseString = " "
 
 
 
+
+
 def createDict(fileObject) :
   f  =  open(fileObject, 'r')
 
@@ -84,6 +86,14 @@ def commandHandler(command):
     elif command.__contains__('SEARCH') :
 
         command_Method = travelFrom(command)
+
+    elif command.__contains__('RETURN_TICKET'):
+
+        command_Method = returnTicket(command)
+
+    elif command.__contains__('RETURNRT_TICKET'):
+
+        command_Method = returnrtTicket(command)
 
     else: 
         command_Method.append(errorMessage)
@@ -281,6 +291,7 @@ def buyTicket(command):
              if actualSeats != 0 and seats_Num > 0 and actualSeats >= seats_Num:
                 actualSeats =  actualSeats - seats_Num 
                 dic[A][0] = actualSeats  #update dictionary
+                
                 seatList.append(purchaseMessage)
 
              elif actualSeats < seats_Num:
@@ -300,6 +311,7 @@ def buyTicket(command):
             if actualSeatsB !=0 and seats_Num > 0 and actualSeatsB >= seats_Num:
                 actualSeatsB = actualSeatsB - seats_Num 
                 roundTrip_Dict[B][0] = actualSeatsB #update dictionary
+                
                 seatList.append(purchaseMessage) 
 
             elif actualSeatsB < seats_Num:
@@ -314,6 +326,9 @@ def buyTicket(command):
     return seatList
 
 def buyrtTicket(command):
+    
+
+
     stringBk = " "
     seatList = []
     errorMessage = " "
@@ -348,7 +363,7 @@ def buyrtTicket(command):
                 elif A == stringBk:
                     purchaseMessage = "PURCHASE TO -- %s -- SUCCESSFULLY COMPLETED\nCHECK YOUR EMAIL TO SEE THE RECEIPT. " % stringBk
 
-
+                
                 seatList.append(purchaseMessage)
 
              elif actualSeats < seats_Num:
@@ -378,7 +393,7 @@ def buyrtTicket(command):
                 elif B == where:
                     purchaseMessage = "PURCHASE TO -- %s -- SUCCESSFULLY COMPLETED\nCHECK YOUR EMAIL TO SEE THE RECEIPT. " % where
 
-
+                
                 seatList.append(purchaseMessage) 
 
             elif actualSeatsB < seats_Num:
@@ -393,11 +408,129 @@ def buyrtTicket(command):
                 errorMessage = "INVALID NUMBER OF SEATS. PLEASE TRY AGAIN "
                 seatList.append(errorMessage)
 
+    
+
+    return seatList
+    
+
+def returnTicket(command):
+
+    seatList = []
+    errorMessage= "INVALID NUMBER OF SEATS TO RETURN. PLEASE TRY AGAIN"
+
+    buy_Action = command.split(" ")[0]
+    where = command.split(" ")[1]
+    myseats = command.split(" ")[2]
+    
+    seats_Num = int(myseats)
+
+    purchaseMessage = "-- %d -- TICKETS SUCCESSFULLY RETURNED " % seats_Num
+
+    
+
+    for A  in  dic.keys(): #    traverse dictionary for flights in files 
+        if where == A :
+             #take the number of seats: seatsNo
+             #substract the # entered from the seatsNo
+             #update dictionary!!!
+             actualSeats =  int(dic[A][0])
+
+             if seats_Num > 0 :
+                actualSeats =  actualSeats + seats_Num 
+                dic[A][0] = actualSeats  #update dictionary
+                 
+                if seats_Num == 1:
+                    purchaseMessage = "-- %d -- TICKET SUCCESSFULLY RETURNED " % seats_Num #if 1 overwrite message 
+
+                seatList.append(purchaseMessage)
+
+            
+             else:
+                actualSeats = 0 
+                seatList.append(errorMessage)
+
+    
+ 
+    for B in roundTrip_Dict.keys(): #traverse dictionary for reversed flights 
+        if where == B:
+           
+            actualSeatsB =  int(roundTrip_Dict[B][0])
+            if  seats_Num > 0 :
+                actualSeatsB = actualSeatsB + seats_Num 
+                roundTrip_Dict[B][0] = actualSeatsB #update dictionary
+                seatList.append(purchaseMessage) 
+
+           
+            else: 
+                actualSeatsB = 0 
+                seatList.append(errorMessage)
+
+
     return seatList
 
 
 
 
+def returnrtTicket(command):
+    stringBk = " "
+    seatList = []
+    errorMessage = " "
+
+    buy_Action = command.split(" ")[0]
+    where = command.split(" ")[1]
+    myseats = command.split(" ")[2]
+
+    seats_Num = int(myseats)
+
+    purchaseMessage = "-- %d -- TICKETS SUCCESSFULLY RETURNED " % seats_Num
+  
+
+    #handling string
+    origin = where.split("-")[0]
+    destino = where.split("-")[1]
+    stringBk = destino + "-" + origin #new result 
+
+
+
+
+    for A  in  dic.keys(): #    traverse dictionary for flights in files 
+            if where == A or stringBk == A:
+
+                #take the number of seats: seatsNo
+                #substract the # entered from the seatsNo
+    
+                actualSeats =  int(dic[A][0])
+
+                if  seats_Num > 0 :
+                    actualSeats =  actualSeats + seats_Num 
+                    dic[A][0] = actualSeats  #update dictionary
+                    seatList.append(purchaseMessage)
+
+                
+                else:
+                    actualSeats = 0 
+                    errorMessage = "INVALID NUMBER OF SEATS. PLEASE TRY AGAIN "
+                    seatList.append(errorMessage)
+
+    
+ 
+    for B in roundTrip_Dict.keys(): #traverse dictionary for reversed flights 
+            if stringBk == B or where == B:
+           
+                actualSeatsB =  int(roundTrip_Dict[B][0])
+
+                if  seats_Num > 0 :
+                    actualSeatsB = actualSeatsB + seats_Num 
+                    roundTrip_Dict[B][0] = actualSeatsB #update dictionary
+                    seatList.append(purchaseMessage) 
+
+
+                else: 
+                    actualSeatsB = 0 
+                    errorMessage = "INVALID NUMBER OF SEATS. PLEASE TRY AGAIN "
+                    seatList.append(errorMessage)
+
+    return seatList
 
 
 
