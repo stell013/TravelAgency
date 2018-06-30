@@ -11,8 +11,6 @@ reverseString = " "
 
 
 
-
-
 def createDict(fileObject) :
   f  =  open(fileObject, 'r')
 
@@ -115,8 +113,10 @@ def showAvailableCommands():
         commandsList.append('<BUYRT_TICKET>') 
         commandsList.append('<RETURN_TICKET [where] [seats]>')
         commandsList.append('<RETURNRT_TICKET [where] [seats]>') 
+        commandsList.append('<QUIT>')
 
         return commandsList 
+
 
 
 
