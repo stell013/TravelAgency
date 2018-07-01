@@ -1,5 +1,5 @@
 from socket import *
-from helperMudule import *
+from helperModule import *
 #import pickle
 import json
 from _thread import *
@@ -14,23 +14,21 @@ createDictroundedTrip()
 serverPort = 10000
 serverSocket = socket(AF_INET, SOCK_STREAM)
 serverSocket.bind(('', serverPort))
-serverSocket.listen(2)
+serverSocket.listen(10)
 print('The server is ready to receive')
 
 
 
 def clientT(conn):
 	
-	#welcome = "Welcome"
-	#conn.send(welcome.encode())
 
 	while True:
 	
 		sentence = conn.recv(1024).decode()
 		if not sentence:
 			break;
-		capitalizedSentence = commandHandler(sentence)
-		data = json.dumps(capitalizedSentence)
+		response = commandHandler(sentence,conn)
+		data = json.dumps(response)
 		conn.send(data.encode())
 
 

@@ -1,11 +1,11 @@
 from socket import *
-serverName = 'localhost'
+
 #import pickle
 import json
 import struct
 
 
-
+serverName = 'localhost'
 serverPort = 10000
 clientSocket = socket(AF_INET, SOCK_STREAM)
 clientSocket.connect((serverName, serverPort))
@@ -16,6 +16,7 @@ while True:
 
 	if sentence.upper() == 'QUIT':
 		clientSocket.close()
+		break
 
 	modifiedSentence = clientSocket.recv(1024)
 	decodeSent = modifiedSentence.decode()

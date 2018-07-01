@@ -52,46 +52,52 @@ def reverseTrip():
 
 #this is the only method called 
 
-def commandHandler(command):
+def commandHandler(command,conn):
 
     command_Method = []
     errorMessage= 'WRONG COMMAND. PLEASE VERIFY THE SPELLING OR YOU CAN CONSULT <HELP>'
 
-    if command == 'HELP' or command == 'help':
+    if command.upper() == 'HELP' and len(command.split()) == 1:
 
-        command_Method = showAvailableCommands()
+        command_Method = showAvailableCommands(command)
 
-    elif command.__contains__('buyrtTicket'):
-
-        command_Method = buyrtTicket(command)
-
-    elif command == 'LIST' :
+    elif command.upper() == 'LIST' and len(command.split()) == 1 :
 
         command_Method = listAllFlights(command)
 
-    elif command.__contains__( 'BUY_TICKET '):
+  
+    elif command.split(" ")[0].upper() == 'BUYRT_TICKET' and len(command.split()) == 3 :
+
+        command_Method = buyrtTicket(command)
+   
+
+    elif command.split(" ")[0].upper() ==  'BUY_TICKET' and len(command.split()) == 3 :
 
         command_Method = buyTicket(command)
     
-    elif command.__contains__('SEARCHDEPARTURE') :
+    elif command.split(" ")[0].upper() == 'SEARCHDEPARTURE' and len(command.split()) == 2:
 
         command_Method = travelTo(command)
 
-    elif command.__contains__('searchall') :
+    elif command.split(" ")[0].upper() == 'SEARCHALL' and len(command.split()) == 2:
 
         command_Method = searchaLL(command)
 
-    elif command.__contains__('SEARCH') :
+    elif command.split(" ")[0].upper() =='SEARCH' and len(command.split()) == 2 :
 
         command_Method = travelFrom(command)
 
-    elif command.__contains__('RETURN_TICKET'):
+    elif command.split(" ")[0].upper() =='RETURN_TICKET' and len(command.split()) == 3:
 
         command_Method = returnTicket(command)
 
-    elif command.__contains__('RETURNRT_TICKET'):
+    elif command.split(" ")[0].upper() =='RETURNRT_TICKET' and len(command.split()) == 3 :
 
         command_Method = returnrtTicket(command)
+
+    elif command.upper() == 'QUIT'and len(command.split()) == 1:
+        conn.close()
+        command_Method.append(errorMessage)
 
     else: 
         command_Method.append(errorMessage)
@@ -101,21 +107,21 @@ def commandHandler(command):
     return  command_Method
  
 
-def showAvailableCommands():
-    
-        commandsList = []
+def showAvailableCommands(command):
+    commandsList = []
 
-        commandsList.append('<SEARCH dest>')
-        commandsList.append('<SEARCHDEPARTURE dest>')
-        commandsList.append('<SEARCHALL DEST>')
-        commandsList.append('<LIST>')
-        commandsList.append('<BUY_TICKET>') 
-        commandsList.append('<BUYRT_TICKET>') 
-        commandsList.append('<RETURN_TICKET [where] [seats]>')
-        commandsList.append('<RETURNRT_TICKET [where] [seats]>') 
-        commandsList.append('<QUIT>')
 
-        return commandsList 
+    commandsList.append('<LIST>')
+    commandsList.append('<SEARCH dest>')
+    commandsList.append('<SEARCHDEPARTURE dest>')
+    commandsList.append('<SEARCHALL DEST>')
+    commandsList.append('<BUY_TICKET>') 
+    commandsList.append('<BUYRT_TICKET>') 
+    commandsList.append('<RETURN_TICKET [where] [seats]>')
+    commandsList.append('<RETURNRT_TICKET [where] [seats]>') 
+    commandsList.append('<QUIT>')
+
+    return commandsList 
 
 
 
@@ -126,19 +132,15 @@ def listAllFlights(sentence):
     flightList = []
     reversedFlightList = []
     
+    
 
-    if sentence == 'LIST':
+    if sentence.upper() == 'LIST':
 
-      flights_list = dic.keys()
+       
+        for flight , flightA in zip( dic.keys(), roundTrip_Dict.keys()):
 
-      for flight in flights_list:
-          flightList.append(flight)
-
-      for up in reverseRoute:
-          reversedFlightList.append(up)
-
-      for reversedEle in reversedFlightList:
-          flightList.append(reversedEle)
+            flightList.append(flight)
+            flightList.append(flightA)
 
 
     return flightList
@@ -153,9 +155,9 @@ def travelFrom(searchCommand):
     
     content = searchCommand.split(" ")
     command = content[0]
-    dest = content[1]
+    dest = content[1].upper()
 
-     
+    
 
     for flight in dic.keys(): #return all the complete trips
 
@@ -163,8 +165,9 @@ def travelFrom(searchCommand):
 
         if flight.split("-")[1] == dest: #if dest is on dictionary
                    # print(origin)
-                   list_Dest.append(origin)
+                   list_Dest.append(flight)
                    # print(flight)  # In case we need the entire route
+       
 
 
     for up in reverseRoute:
@@ -174,10 +177,12 @@ def travelFrom(searchCommand):
         if up.split("-")[1] == dest:
                  #print(reversedOrigin)
                  #print(up)
-                 reverseList_Dest.append(reversedOrigin)
+                 reverseList_Dest.append(up)
+        
 
     for reversedEle in reverseList_Dest:
         list_Dest.append(reversedEle)
+    
 
      
     return list_Dest
@@ -185,7 +190,7 @@ def travelFrom(searchCommand):
 
 
 
-#SEARCHDEPARTURE dep method
+
 
 
 
@@ -197,12 +202,11 @@ def travelTo(searchCommand):
 
     content = searchCommand.split(" ")
     command = content[0]
-    dep = content[1]     #departure name
+    dep = content[1].upper()     #departure name
 
-    # try to validate it for capitalize letters
-    if command == 'SEARCHDEPARTURE':
+    
 
-        for flight in dic.keys():  # return all the complete trips
+    for flight in dic.keys():  # return all the complete trips
 
             origin = flight.split("-")[0]  # get the departure place
             dest = flight.split("-")[1]
@@ -214,7 +218,7 @@ def travelTo(searchCommand):
 
 
 
-        for up in reverseRoute:
+    for up in reverseRoute:
 
             reversedOrigin = up.split("-")[0]
             reversedDest = up.split("-")[1]
@@ -224,7 +228,7 @@ def travelTo(searchCommand):
                 # print(up)
                 reverseList_Dep.append(up)
 
-        for reversedEle in reverseList_Dep:
+    for reversedEle in reverseList_Dep:
             list_Dep.append(reversedEle)
 
 
@@ -241,12 +245,12 @@ def createDictroundedTrip():
     for f, s, c in zip(reverseRoute, reverseSeats, reverseCost):
         roundTrip_Dict[f] = [s,c ]  #Dictionary
         
-    print(" Dictionary for roundedTrip has been created")
+    
     return True 
 
 
 def searchaLL(command):
-    location = command.split(" ")[1]
+    location = command.split(" ")[1].upper()
 
     
     roundedInfo = []
@@ -259,12 +263,12 @@ def searchaLL(command):
             if locA == location: 
                 rest = str(dic[flightA][0]) #seats
                 money = str(dic[flightA][1])
-                roundedInfo.append("\nORIGINAL" + '\n' + flightA + '\n' + "Seats left: " + rest + '\n' + "Cost each: " + money )
+                roundedInfo.append("\n"  + flightA + ':\n' + rest +  " seats left at"  + " $" +money +  " each " )
 
             if loc == location: 
                 rest2 = str(roundTrip_Dict[flight][0])
                 money2 = str(roundTrip_Dict[flight][1])
-                roundedInfo.append("\nROUNDED" + '\n' + flight + '\n' + "Seats left: " + rest2 + '\n' + "Cost each: " + money2)
+                roundedInfo.append("\n"  + flight + ':\n' + rest2 +  " seats left at" + " $" + money2 + " each")
            
     return roundedInfo
 
@@ -275,12 +279,12 @@ def buyTicket(command):
     errorMessage= "INVALID NUMBER OF SEATS PLEASE TRY AGAIN"
 
     buy_Action = command.split(" ")[0]
-    where = command.split(" ")[1]
+    where = command.split(" ")[1].upper()
     myseats = command.split(" ")[2]
     
     seats_Num = int(myseats)
 
-    purchaseMessage = "PURCHASE TO -- %s -- SUCCESSFULLY COMPLETED\nCHECK YOUR EMAIL TO SEE THE RECEIPT. " % where
+    purchaseMessage = "PURCHASE TO -- %s -- SUCCESSFULLY COMPLETED\n" % where
 
     for A  in  dic.keys(): #    traverse dictionary for flights in files 
         if where == A :
@@ -334,7 +338,7 @@ def buyrtTicket(command):
     errorMessage = " "
 
     buy_Action = command.split(" ")[0]
-    where = command.split(" ")[1]
+    where = command.split(" ")[1].upper()
     myseats = command.split(" ")[2]
 
     seats_Num = int(myseats)
@@ -359,9 +363,9 @@ def buyrtTicket(command):
                 dic[A][0] = actualSeats  #update dictionary
                 
                 if A == where:
-                    purchaseMessage = "PURCHASE TO -- %s -- SUCCESSFULLY COMPLETED\nCHECK YOUR EMAIL TO SEE THE RECEIPT. " % where
+                    purchaseMessage = "PURCHASE TO -- %s -- SUCCESSFULLY COMPLETED\n " % where
                 elif A == stringBk:
-                    purchaseMessage = "PURCHASE TO -- %s -- SUCCESSFULLY COMPLETED\nCHECK YOUR EMAIL TO SEE THE RECEIPT. " % stringBk
+                    purchaseMessage = "PURCHASE TO -- %s -- SUCCESSFULLY COMPLETED\n" % stringBk
 
                 
                 seatList.append(purchaseMessage)
@@ -377,6 +381,7 @@ def buyrtTicket(command):
                 actualSeats = 0 
                 errorMessage = "INVALID NUMBER OF SEATS. PLEASE TRY AGAIN "
                 seatList.append(errorMessage)
+        
 
     
  
@@ -389,9 +394,9 @@ def buyrtTicket(command):
                 roundTrip_Dict[B][0] = actualSeatsB #update dictionary
 
                 if B == stringBk:
-                    purchaseMessage = "PURCHASE TO -- %s -- SUCCESSFULLY COMPLETED\nCHECK YOUR EMAIL TO SEE THE RECEIPT. " % stringBk
+                    purchaseMessage = "PURCHASE TO -- %s -- SUCCESSFULLY COMPLETED\n " % stringBk
                 elif B == where:
-                    purchaseMessage = "PURCHASE TO -- %s -- SUCCESSFULLY COMPLETED\nCHECK YOUR EMAIL TO SEE THE RECEIPT. " % where
+                    purchaseMessage = "PURCHASE TO -- %s -- SUCCESSFULLY COMPLETED\n " % where
 
                 
                 seatList.append(purchaseMessage) 
@@ -407,7 +412,7 @@ def buyrtTicket(command):
                 actualSeatsB = 0 
                 errorMessage = "INVALID NUMBER OF SEATS. PLEASE TRY AGAIN "
                 seatList.append(errorMessage)
-
+        
     
 
     return seatList
@@ -419,7 +424,7 @@ def returnTicket(command):
     errorMessage= "INVALID NUMBER OF SEATS TO RETURN. PLEASE TRY AGAIN"
 
     buy_Action = command.split(" ")[0]
-    where = command.split(" ")[1]
+    where = command.split(" ")[1].upper()
     myseats = command.split(" ")[2]
     
     seats_Num = int(myseats)
@@ -477,7 +482,7 @@ def returnrtTicket(command):
     errorMessage = " "
 
     buy_Action = command.split(" ")[0]
-    where = command.split(" ")[1]
+    where = command.split(" ")[1].upper()
     myseats = command.split(" ")[2]
 
     seats_Num = int(myseats)
